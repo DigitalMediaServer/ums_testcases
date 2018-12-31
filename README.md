@@ -10,8 +10,7 @@ orig/freesound-365215.wav
 https://freesound.org/s/365215/
 by Rutger Muller, CC-0 license
 
-The originals are unnecessarily large. The test content
-has been prepared by prepare.sh
+The original video is at unnecessarily large, definition, and is reduced in the testcase content.
 
 ffmpeg version used:
 
