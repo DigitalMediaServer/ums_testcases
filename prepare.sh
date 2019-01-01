@@ -11,7 +11,8 @@ VSCALE="-vf scale=640:-1"
 declare -A vcodecs
 vcodecs["h264"]="-c:v libx264 -profile:v main"
 vcodecs["h265"]="-c:v libx265"
-vcodecs["hvid"]="-c:v libxvid"
+vcodecs["xvid"]="-c:v mpeg4 -profile:v 15 -level 5 -qscale:v 11"
+#vcodecs["xvid"]="-c:v libxvid =qscale:v 11"
 
 declare -A acodecs
 acodecs["aacLC"]="-c:a libfdk_aac -b:a 256k"
@@ -37,8 +38,13 @@ acontainers["mp4"]="ac3 mp3 aacLC aacHE mp2"
 
 for fmt in ${!vcontainers[@]}; do
     for vcod in ${vcontainers[${fmt}]}; do
+	# For some reason, mp4 won't allow the XVID tag in the metadata
+	VTAG=""
+	if [[ $vcod == xvid ]]; then VTAG="-vtag xvid" ; fi
+	if [[ $fmt == mp4 ]]; then VTAG="" ; fi
 	for acod in ${acontainers[${fmt}]}; do
-	    ffmpeg -n $VINPUT $AINPUT ${vcodecs[${vcod}]} $VSCALE ${acodecs[${acod}]} $vcod-$acod-2ch.$fmt
+	    echo ffmpeg -n $VINPUT $AINPUT ${vcodecs[${vcod}]} $VSCALE $VTAG ${acodecs[${acod}]} $vcod-$acod-2ch.$fmt
+	    ffmpeg -n $VINPUT $AINPUT ${vcodecs[${vcod}]} $VSCALE $VTAG ${acodecs[${acod}]} $vcod-$acod-2ch.$fmt
 	done
     done
 done
